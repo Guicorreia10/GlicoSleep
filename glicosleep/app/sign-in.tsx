@@ -10,15 +10,13 @@ const SignIn = () => {
 
   const handleLogin = async () => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
 
       Alert.alert("Sucesso", "Login realizado com sucesso!");
-      router.replace("../(root)/(tabs)/index");
+      router.replace("/"); 
+
+
     } catch (error: any) {
       Alert.alert("Erro", error.message || "Erro ao fazer login.");
     }
@@ -26,15 +24,10 @@ const SignIn = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
-      {/* Onboarding Image */}
       <Image
         source={require('../assets/images/onboarding.png')}
         resizeMode="contain"
-        style={{
-          width: '100%',
-          height: 300,
-          marginBottom: 30,
-        }}
+        style={{ width: '100%', height: 400, marginBottom: 30 }}
       />
 
       <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: 'center' }}>
@@ -85,7 +78,7 @@ const SignIn = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => router.push("/registo")}
+        onPress={() => router.push("/registo")} // <-- Aqui está o botão corrigido!
         style={{
           padding: 15,
           borderRadius: 10,

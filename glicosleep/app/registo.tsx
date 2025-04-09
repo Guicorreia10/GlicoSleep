@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, Image, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { supabase } from "../lib/supabase";
-import iconImage from "../assets/images/icon.png"; // Certifique-se de que o caminho está correto
-
+import iconImage from "../assets/images/icon.png"; 
 const Registro = () => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
