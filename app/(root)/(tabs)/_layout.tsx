@@ -54,7 +54,16 @@ const TabsLayout = () => {
           ),
         }}
       />
-    
+      <Tabs.Screen
+        name="conectar"
+        options={{
+          title: 'Conectar',
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon={icons.bed} focused={focused} title="Conectar" />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="perfil"
         options={{

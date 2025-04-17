@@ -13,7 +13,7 @@ const SignIn = () => {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
 
-      Alert.alert("Sucesso", "Login realizado com sucesso!");
+      Alert.alert("Perfeito!!", "Login realizado com sucesso!");
       router.replace("/"); 
 
 
@@ -78,7 +78,7 @@ const SignIn = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => router.push("/registo")} // <-- Aqui está o botão corrigido!
+        onPress={() => router.push("/registo")} 
         style={{
           padding: 15,
           borderRadius: 10,
