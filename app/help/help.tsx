@@ -14,7 +14,7 @@ const Help = () => {
       <KeyboardAwareScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}>
         {/* Cabeçalho */}
         <View className="mt-8 flex items-center">
-          <Image source={icons.bell} className="size-12" />
+          <Image source={icons.info} className="size-12" />
           <Text className="text-4xl font-rubik-bold text-primary-900 text-center mt-3">
             Ajuda e Informações
           </Text>
