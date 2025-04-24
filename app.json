@@ -21,7 +21,10 @@
         "BLUETOOTH_ADMIN",
         "BLUETOOTH_CONNECT",
         "BLUETOOTH_SCAN",
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
@@ -63,6 +66,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f77af591-72ea-48e5-a2fe-6ef66d56115e"
+      }
     }
   }
 }
