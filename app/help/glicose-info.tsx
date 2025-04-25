@@ -23,9 +23,9 @@ const GlicoseInfoScreen = () => {
         <TouchableOpacity
   onPress={() => router.back()}
   style={{
-    position: 'absolute',  // Adiciona posição absoluta
-    top: 20,               // Distância do topo
-    left: 10,              // Distância da esquerda
+    position: 'absolute',  
+    top: 20,               
+    left: 10,              
     padding: 10,
     backgroundColor: '#007AFF',
     borderRadius: 5,

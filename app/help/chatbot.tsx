@@ -15,7 +15,7 @@ const Chatbot: React.FC = () => {
     setMessages([
       {
         _id: 1,
-        text: 'Olá! Sou o GlicoBot 🤖. Como posso te ajudar hoje?',
+        text: 'Olá! Sou o GlicoBot 🤖. Como te posso ajudar hoje?',
         createdAt: new Date(),
         user: botUser,
       },

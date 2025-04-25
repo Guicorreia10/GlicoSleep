@@ -5,8 +5,17 @@ import icons from '@/constants/icons';
 
 const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: any; title: string }) => (
   <View className="flex-1 mt-3 flex flex-col items-center">
-    <Image source={icon} tintColor={focused ? '#0061ff' : '#666876'} resizeMode="contain" className="size-6" />
-    <Text className={`${focused ? 'text-primary-300 font-rubik-medium' : 'text-black-200 font-rubik'} text-xs w-full text-center mt-1`}>
+    <Image
+      source={icon}
+      tintColor={focused ? '#0061ff' : '#666876'}
+      resizeMode="contain"
+      className="size-6"
+    />
+    <Text
+      className={`${
+        focused ? 'text-primary-300 font-rubik-medium' : 'text-black-200 font-rubik'
+      } text-xs w-full text-center mt-1`}
+    >
       {title}
     </Text>
   </View>
@@ -34,16 +43,17 @@ const TabsLayout = () => {
         },
       }}
     >
+      {/* Aba Home */}
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.home} focused={focused} title="Home" />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon={icons.home} focused={focused} title="Home" />,
         }}
       />
+
+      {/* Aba Histórico */}
       <Tabs.Screen
         name="explore"
         options={{
@@ -54,24 +64,34 @@ const TabsLayout = () => {
           ),
         }}
       />
+
+      {/* Aba Conectar */}
       <Tabs.Screen
         name="conectar"
         options={{
           title: 'Conectar',
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.bed} focused={focused} title="Conectar" />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon={icons.bed} focused={focused} title="Conectar" />,
         }}
       />
+
+      {/* Aba Entrada Manual (Somente a página principal) */}
+      <Tabs.Screen
+        name="manual-input"
+        options={{
+          title: 'Entrada Manual',
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <TabIcon icon={icons.edit} focused={focused} title="Manual" />,
+        }}
+      />
+
+      {/* Aba Perfil */}
       <Tabs.Screen
         name="perfil"
         options={{
           title: 'Perfil',
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.person} focused={focused} title="Perfil" />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon={icons.person} focused={focused} title="Perfil" />,
         }}
       />
     </Tabs>

@@ -1,26 +1,90 @@
-import { Text, View, StyleSheet, Dimensions } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Dimensions, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native";
+import { PieChart, BarChart } from "react-native-chart-kit";
+import { supabase } from "../../../lib/supabase";
 import images from "../../../constants/images";
 import icons from "@/constants/icons";
-import { PieChart, BarChart } from "react-native-chart-kit";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function Index() {
-  const pieData = [
-    { name: "Sono leve", population: 6, color: "#ADD8E6", legendFontColor: "#000", legendFontSize: 12 },
-    { name: "Sono profundo", population: 2, color: "#00CED1", legendFontColor: "#000", legendFontSize: 12 },
-  ];
+  const [sleepEvaluation, setSleepEvaluation] = useState<number | null>(null); // Avaliação do sono
+  const [sleepMessage, setSleepMessage] = useState<string>("Carregando..."); // Mensagem personalizada
+  const [sleepData, setSleepData] = useState<{
+    sono: number;
+    qualidade_sono: number;
+    dificuldade_ao_dormir: string;
+    uso_dispositivos: string;
+  } | null>(null); // Dados de sono para gráficos
 
-  const barData = {
-    labels: ["00h", "02h", "04h", "06h"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80],
-      },
-    ],
-  };
+  useEffect(() => {
+    const fetchSleepData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("dados_usuario")
+          .select("sono, qualidade_sono, dificuldade_ao_dormir, uso_dispositivos")
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (error) {
+          console.error("Erro ao buscar dados de sono:", error);
+          Alert.alert("Erro", "Não foi possível carregar os dados do sono.");
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const { sono, qualidade_sono, dificuldade_ao_dormir, uso_dispositivos } = data[0];
+          setSleepData(data[0]);
+
+          // Calcula a avaliação do sono
+          const hoursScore = Math.min(sono / 8 * 10, 10) * 0.4; // 8 horas é ideal
+          const qualityScore = qualidade_sono * 0.3;
+          const difficultyScore = dificuldade_ao_dormir === "Sim" ? 0 : 10 * 0.2;
+          const deviceScore = uso_dispositivos === "Sim" ? 0 : 10 * 0.1;
+          const finalScore = hoursScore + qualityScore + difficultyScore + deviceScore;
+
+          setSleepEvaluation(Number(finalScore.toFixed(1))); // Atualiza a avaliação
+
+          // Define mensagem baseada na avaliação
+          if (finalScore <= 3) {
+            setSleepMessage("Seu sono foi muito ruim. Procure um médico para orientação.");
+          } else if (finalScore > 3 && finalScore <= 5) {
+            setSleepMessage("Sono insatisfatório. Reduza o uso de dispositivos antes de dormir e melhore seus hábitos.");
+          } else if (finalScore > 5 && finalScore <= 8) {
+            setSleepMessage("Sono razoável, mas pode melhorar com uma rotina mais consistente.");
+          } else {
+            setSleepMessage("Excelente! Seu sono está ótimo. Continue assim!");
+          }
+        } else {
+          Alert.alert("Aviso", "Nenhum dado de sono encontrado.");
+        }
+      } catch (err) {
+        console.error("Erro inesperado:", err);
+        Alert.alert("Erro", "Ocorreu um erro ao carregar os dados.");
+      }
+    };
+
+    fetchSleepData();
+  }, []);
+
+  const pieData = [
+    {
+      name: "Sono leve",
+      population: sleepData ? sleepData.sono - sleepData.qualidade_sono : 0,
+      color: "#ADD8E6",
+      legendFontColor: "#000",
+      legendFontSize: 12,
+    },
+    {
+      name: "Sono profundo",
+      population: sleepData ? sleepData.qualidade_sono : 0,
+      color: "#00CED1",
+      legendFontColor: "#000",
+      legendFontSize: 12,
+    },
+  ];
 
   const chartConfig = {
     backgroundGradientFrom: "#fff",
@@ -56,54 +120,31 @@ export default function Index() {
       {/* Main Content */}
       <View style={styles.mainContent}>
         {/* Sleep Info */}
-        <Text style={styles.sectionTitle}>Sono:</Text>
+        <Text style={styles.sectionTitle}>Avaliação do Seu Sono</Text>
+        <View style={styles.sleepEvaluationContainer}>
+          <Text style={styles.sleepEvaluationValue}>
+            {sleepEvaluation ? `${sleepEvaluation} / 10` : "Carregando..."}
+          </Text>
+          <Text style={styles.sleepEvaluationExplanation}>
+            Avaliação calculada com base na duração do sono, sua qualidade e outros hábitos.
+          </Text>
+          <Text style={styles.sleepMessage}>{sleepMessage}</Text>
+        </View>
+
+        {/* Gráficos de Sono */}
+        <Text style={styles.sectionTitle}>Gráfico do Sono</Text>
         <View style={styles.sleepInfoContainer}>
           <PieChart
             data={pieData}
-            width={150}
+            width={screenWidth - 50}
             height={150}
             chartConfig={chartConfig}
             accessor={"population"}
             backgroundColor={"transparent"}
-            paddingLeft={"0"}
-            center={[75, 0]}
+            paddingLeft={"15"}
+            center={[10, 0]}
             style={styles.pieChart}
           />
-          <View style={styles.sleepDetails}>
-            <Text style={styles.sleepText}>Sono leve: x horas</Text>
-            <Text style={styles.sleepText}>Sono Profundo: x horas</Text>
-          </View>
-        </View>
-
-        {/* Glycemia Chart */}
-        <Text style={styles.sectionTitle}>Variação da Glicemia ao longo da noite:</Text>
-        <BarChart
-          data={barData}
-          width={screenWidth - 40}
-          height={220}
-          chartConfig={chartConfig}
-          verticalLabelRotation={30}
-          style={styles.barChart}
-          yAxisLabel=""
-          yAxisSuffix="mg/dL"
-        />
-
-        {/* Alerts and Recommendations */}
-        <Text style={styles.sectionTitle}>Alertas e Recomendações:</Text>
-        <Text style={styles.recommendationsText}>
-          Um resumo geral da noite e de tudo o que pode melhorar, caso esteja algo mal com os valores, botão para aceder à página de ajuda.
-        </Text>
-      </View>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <View style={styles.footerButton}>
-          <Image source={icons.home} style={styles.footerIcon} />
-          <Text style={styles.footerText}>Menu Inicial</Text>
-        </View>
-        <View style={styles.footerButton}>
-          <Image source={icons.calendar} style={styles.footerIcon} />
-          <Text style={styles.footerText}>Registos</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -113,7 +154,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#AEE4FF",
+    backgroundColor: "#EAF7FF",
   },
   header: {
     flexDirection: "row",
@@ -139,12 +180,12 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 12,
     fontFamily: "Rubik",
-    color: "white",
+    color: "#333",
   },
   name: {
     fontSize: 16,
     fontFamily: "Rubik-Medium",
-    color: "white",
+    color: "#333",
   },
   bellIcon: {
     width: 24,
@@ -154,58 +195,42 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: "Rubik-Medium",
-    color: "white",
+    color: "#08457E",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  sleepEvaluationContainer: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  sleepEvaluationValue: {
+    fontSize: 40,
+    fontFamily: "Rubik-Bold",
+    color: "#007AFF",
+    textAlign: "center",
+  },
+  sleepEvaluationExplanation: {
+    fontSize: 14,
+    fontFamily: "Rubik",
+    color: "#555",
+    textAlign: "center",
     marginBottom: 10,
   },
+  sleepMessage: {
+    fontSize: 16,
+    fontFamily: "Rubik",
+    color: "#FF4500",
+    textAlign: "center",
+    marginTop: 10,
+  },
   sleepInfoContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
   },
   pieChart: {
     marginVertical: 8,
   },
-  sleepDetails: {
-    marginLeft: 15,
-  },
-  sleepText: {
-    fontSize: 14,
-    fontFamily: "Rubik",
-    color: "white",
-  },
-  barChart: {
-    marginVertical: 8,
-    borderRadius: 16,
-  },
-  recommendationsText: {
-    fontSize: 14,
-    fontFamily: "Rubik",
-    color: "white",
-  },
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    backgroundColor: "#00BFFF",
-    paddingVertical: 15,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  footerButton: {
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  footerIcon: {
-    width: 24,
-    height: 24,
-  },
-  footerText: {
-    fontSize: 12,
-    fontFamily: "Rubik",
-    color: "white",
-  },
 });
+

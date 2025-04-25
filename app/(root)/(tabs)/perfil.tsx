@@ -1,12 +1,12 @@
-import { View, Text, ScrollView, TouchableOpacity, ImageSourcePropType } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Alert, ImageSourcePropType } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Image } from "react-native";
+import { useRouter } from "expo-router";
+import { supabase } from "@/lib/supabase";
 import icons from "@/constants/icons";
 import images from "../../../constants/images";
-import { Image } from 'react-native';
-import { settings } from '@/constants/data';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'expo-router';
+import { settings } from "@/constants/data";
 
 interface SettingsItemProps {
   icon: ImageSourcePropType;
@@ -29,20 +29,27 @@ const SettingsItem = ({ icon, title, onPress, textStyle, showArrow = true }: Set
 );
 
 const Profile = () => {
+  const [language, setLanguage] = useState<string>("Português");
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      router.replace('/sign-in');
-      alert('Sessão terminada com sucesso!');
+      router.replace("/sign-in");
+      Alert.alert("Sucesso", "Sessão terminada com sucesso!");
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert('Erro ao tentar terminar a sessão: ' + error.message);
+        Alert.alert("Erro", "Erro ao tentar terminar a sessão: " + error.message);
       } else {
-        alert('Erro desconhecido');
+        Alert.alert("Erro", "Erro desconhecido");
       }
     }
+  };
+
+  const changeLanguage = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    Alert.alert("Idioma Alterado", `O idioma foi alterado para: ${newLanguage}`);
+    // Aqui você pode adicionar lógica adicional para mudar o idioma da aplicação
   };
 
   return (
@@ -78,13 +85,28 @@ const Profile = () => {
             icon={icons.info}
             title="Ajuda e Informações"
             showArrow={true}
-            onPress={() => router.push('/help/help')}
+            onPress={() => router.push("/help/help")}
           />
           <SettingsItem
             icon={icons.logout}
             title="Terminar Sessão"
             showArrow={false}
             onPress={handleLogout}
+          />
+        </View>
+        <View className="flex flex-col mt-5 border-t pt-5 border-primary-200">
+          <Text className="text-xl font-rubik-bold mt-5">Idioma</Text>
+          <SettingsItem
+            icon={icons.language}
+            title={`Idioma Atual: ${language}`}
+            showArrow={true}
+            onPress={() =>
+              Alert.alert("Alterar Idioma", "Escolha um idioma:", [
+                { text: "Português", onPress: () => changeLanguage("Português") },
+                { text: "English", onPress: () => changeLanguage("English") },
+                { text: "Cancelar", style: "cancel" },
+              ])
+            }
           />
         </View>
       </ScrollView>
