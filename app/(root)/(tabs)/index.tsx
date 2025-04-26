@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Dimensions, Alert } from "react-native";
+import { Text, View, StyleSheet, Dimensions, Alert, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native";
-import { PieChart, BarChart } from "react-native-chart-kit";
 import { supabase } from "../../../lib/supabase";
 import images from "../../../constants/images";
 import icons from "@/constants/icons";
@@ -10,227 +9,129 @@ import icons from "@/constants/icons";
 const screenWidth = Dimensions.get("window").width;
 
 export default function Index() {
-  const [sleepEvaluation, setSleepEvaluation] = useState<number | null>(null); // Avaliação do sono
-  const [sleepMessage, setSleepMessage] = useState<string>("Carregando..."); // Mensagem personalizada
-  const [sleepData, setSleepData] = useState<{
-    sono: number;
-    qualidade_sono: number;
-    dificuldade_ao_dormir: string;
-    uso_dispositivos: string;
-  } | null>(null); // Dados de sono para gráficos
+  const [sleepEvaluation, setSleepEvaluation] = useState<number | null>(null);
+  const [sleepMessage, setSleepMessage] = useState<string>("Carregando...");
+  const [glucoseValue, setGlucoseValue] = useState<number | null>(null);
+  const [glucoseMessage, setGlucoseMessage] = useState<string>("Carregando...");
 
   useEffect(() => {
-    const fetchSleepData = async () => {
+    const fetchData = async () => {
       try {
         const { data, error } = await supabase
           .from("dados_usuario")
-          .select("sono, qualidade_sono, dificuldade_ao_dormir, uso_dispositivos")
+          .select("sono, qualidade_sono, dificuldade_ao_dormir, uso_dispositivos, glicose")
           .order("created_at", { ascending: false })
           .limit(1);
 
         if (error) {
-          console.error("Erro ao buscar dados de sono:", error);
-          Alert.alert("Erro", "Não foi possível carregar os dados do sono.");
+          console.error("Erro ao buscar dados:", error);
+          Alert.alert("Erro", "Não foi possível carregar os dados.");
           return;
         }
 
         if (data && data.length > 0) {
-          const { sono, qualidade_sono, dificuldade_ao_dormir, uso_dispositivos } = data[0];
-          setSleepData(data[0]);
+          const { sono, qualidade_sono, dificuldade_ao_dormir, uso_dispositivos, glicose } = data[0];
+          setGlucoseValue(glicose);
 
-          // Calcula a avaliação do sono
-          const hoursScore = Math.min(sono / 8 * 10, 10) * 0.4; // 8 horas é ideal
+          const hoursScore = Math.min(sono / 8 * 10, 10) * 0.4;
           const qualityScore = qualidade_sono * 0.3;
           const difficultyScore = dificuldade_ao_dormir === "Sim" ? 0 : 10 * 0.2;
           const deviceScore = uso_dispositivos === "Sim" ? 0 : 10 * 0.1;
           const finalScore = hoursScore + qualityScore + difficultyScore + deviceScore;
+          setSleepEvaluation(Number(finalScore.toFixed(1)));
 
-          setSleepEvaluation(Number(finalScore.toFixed(1))); // Atualiza a avaliação
-
-          // Define mensagem baseada na avaliação
-          if (finalScore <= 3) {
-            setSleepMessage("Seu sono foi muito ruim. Procure um médico para orientação.");
-          } else if (finalScore > 3 && finalScore <= 5) {
-            setSleepMessage("Sono insatisfatório. Reduza o uso de dispositivos antes de dormir e melhore seus hábitos.");
-          } else if (finalScore > 5 && finalScore <= 8) {
-            setSleepMessage("Sono razoável, mas pode melhorar com uma rotina mais consistente.");
+          if (finalScore <= 5) {
+            setSleepMessage("Tente dormir melhor hoje!");
           } else {
-            setSleepMessage("Excelente! Seu sono está ótimo. Continue assim!");
+            setSleepMessage("Seu sono está ótimo!");
           }
-        } else {
-          Alert.alert("Aviso", "Nenhum dado de sono encontrado.");
+
+          if (glicose <= 70) {
+            setGlucoseMessage("Atenção: glicose baixa.");
+          } else if (glicose <= 140) {
+            setGlucoseMessage("Glicose dentro do normal!");
+          } else {
+            setGlucoseMessage("Cuidado: glicose elevada.");
+          }
         }
       } catch (err) {
         console.error("Erro inesperado:", err);
-        Alert.alert("Erro", "Ocorreu um erro ao carregar os dados.");
+        Alert.alert("Erro", "Erro ao carregar dados.");
       }
     };
 
-    fetchSleepData();
+    fetchData();
   }, []);
-
-  const pieData = [
-    {
-      name: "Sono leve",
-      population: sleepData ? sleepData.sono - sleepData.qualidade_sono : 0,
-      color: "#ADD8E6",
-      legendFontColor: "#000",
-      legendFontSize: 12,
-    },
-    {
-      name: "Sono profundo",
-      population: sleepData ? sleepData.qualidade_sono : 0,
-      color: "#00CED1",
-      legendFontColor: "#000",
-      legendFontSize: 12,
-    },
-  ];
-
-  const chartConfig = {
-    backgroundGradientFrom: "#fff",
-    backgroundGradientTo: "#fff",
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: "#08457E",
-    },
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <View style={styles.avatarContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
             <Image source={images.avatar} style={styles.avatar} />
+            <View>
+              <Text style={styles.greeting}>Olá, Gui 👋</Text>
+              <Text style={styles.subGreeting}>Pronto para hoje?</Text>
+            </View>
           </View>
-          <View style={styles.userInfo}>
-            <Text style={styles.greeting}>Bom Dia</Text>
-            <Text style={styles.name}>Gui</Text>
-          </View>
+          <Image source={icons.bell} style={styles.bellIcon} />
         </View>
-        <Image source={icons.bell} style={styles.bellIcon} />
-      </View>
 
-      {/* Main Content */}
-      <View style={styles.mainContent}>
-        {/* Sleep Info */}
-        <Text style={styles.sectionTitle}>Avaliação do Seu Sono</Text>
-        <View style={styles.sleepEvaluationContainer}>
-          <Text style={styles.sleepEvaluationValue}>
+        {/* Resumo do Dia */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Resumo do Sono</Text>
+          <Text style={styles.cardValue}>
             {sleepEvaluation ? `${sleepEvaluation} / 10` : "Carregando..."}
           </Text>
-          <Text style={styles.sleepEvaluationExplanation}>
-            Avaliação calculada com base na duração do sono, sua qualidade e outros hábitos.
-          </Text>
-          <Text style={styles.sleepMessage}>{sleepMessage}</Text>
+          <Text style={styles.cardText}>{sleepMessage}</Text>
         </View>
 
-        {/* Gráficos de Sono */}
-        <Text style={styles.sectionTitle}>Gráfico do Sono</Text>
-        <View style={styles.sleepInfoContainer}>
-          <PieChart
-            data={pieData}
-            width={screenWidth - 50}
-            height={150}
-            chartConfig={chartConfig}
-            accessor={"population"}
-            backgroundColor={"transparent"}
-            paddingLeft={"15"}
-            center={[10, 0]}
-            style={styles.pieChart}
-          />
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Glicose Atual</Text>
+          <Text style={styles.cardValue}>
+            {glucoseValue ? `${glucoseValue} mg/dL` : "Carregando..."}
+          </Text>
+          <Text style={styles.cardText}>{glucoseMessage}</Text>
         </View>
-      </View>
+
+        {/* Ações Recomendadas */}
+        <Text style={styles.sectionTitle}>Ações para Hoje</Text>
+        <View style={styles.actionBox}>
+          <Text style={styles.actionItem}>🌙 Durma 30 minutos mais cedo.</Text>
+          <Text style={styles.actionItem}>💧 Beba 2 litros de água.</Text>
+          <Text style={styles.actionItem}>🚶‍♂️ Faça uma caminhada rápida.</Text>
+          <Text style={styles.actionItem}>🍎 Prefira frutas no café da manhã.</Text>
+        </View>
+
+        {/* Progresso */}
+        <Text style={styles.sectionTitle}>Seu Progresso</Text>
+        <View style={styles.progressBox}>
+          <Text style={styles.progressItem}>🏆 5 dias seguidos dormindo 7h+</Text>
+          <Text style={styles.progressItem}>💪 Glicose controlada 3 dias</Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
+// Estilos
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#EAF7FF",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  avatarContainer: {
-    marginRight: 10,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-  },
-  userInfo: {
-    flexDirection: "column",
-  },
-  greeting: {
-    fontSize: 12,
-    fontFamily: "Rubik",
-    color: "#333",
-  },
-  name: {
-    fontSize: 16,
-    fontFamily: "Rubik-Medium",
-    color: "#333",
-  },
-  bellIcon: {
-    width: 24,
-    height: 24,
-  },
-  mainContent: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontFamily: "Rubik-Medium",
-    color: "#08457E",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  sleepEvaluationContainer: {
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  sleepEvaluationValue: {
-    fontSize: 40,
-    fontFamily: "Rubik-Bold",
-    color: "#007AFF",
-    textAlign: "center",
-  },
-  sleepEvaluationExplanation: {
-    fontSize: 14,
-    fontFamily: "Rubik",
-    color: "#555",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  sleepMessage: {
-    fontSize: 16,
-    fontFamily: "Rubik",
-    color: "#FF4500",
-    textAlign: "center",
-    marginTop: 10,
-  },
-  sleepInfoContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  pieChart: {
-    marginVertical: 8,
-  },
+  safeArea: { flex: 1, backgroundColor: "#F0F8FF" },
+  scrollContent: { padding: 20 },
+  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
+  headerLeft: { flexDirection: "row", alignItems: "center" },
+  avatar: { width: 50, height: 50, borderRadius: 25, marginRight: 10 },
+  greeting: { fontSize: 18, fontFamily: "Rubik-Medium", color: "#08457E" },
+  subGreeting: { fontSize: 14, color: "#888" },
+  bellIcon: { width: 24, height: 24 },
+  card: { backgroundColor: "#fff", padding: 20, borderRadius: 16, marginBottom: 20, shadowColor: "#000", shadowOpacity: 0.1, shadowOffset: { width: 0, height: 2 }, shadowRadius: 8, elevation: 5 },
+  cardTitle: { fontSize: 18, fontFamily: "Rubik-Bold", color: "#08457E", marginBottom: 5 },
+  cardValue: { fontSize: 36, fontFamily: "Rubik-Bold", color: "#007AFF" },
+  cardText: { fontSize: 14, color: "#666", marginTop: 5 },
+  sectionTitle: { fontSize: 20, fontFamily: "Rubik-Bold", color: "#08457E", marginBottom: 10, marginTop: 20 },
+  actionBox: { backgroundColor: "#E0F7FA", padding: 15, borderRadius: 12 },
+  actionItem: { fontSize: 14, color: "#00796B", marginBottom: 8 },
+  progressBox: { backgroundColor: "#FFF3E0", padding: 15, borderRadius: 12, marginTop: 10 },
+  progressItem: { fontSize: 14, color: "#E65100", marginBottom: 8 },
 });
-

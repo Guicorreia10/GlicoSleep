@@ -17,7 +17,7 @@ const SonoInputScreen = () => {
       if (error) {
         console.error('Erro ao recuperar user_id:', error);
       } else if (data?.user) {
-        setUserId(data.user.id); // Captura o ID do usuário logado
+        setUserId(data.user.id); // ID do usuário logado
       }
     };
 
@@ -31,7 +31,7 @@ const SonoInputScreen = () => {
     }
 
     if (!userId) {
-      Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+      Alert.alert('Erro', 'Utilizador não autenticado. Faça login novamente.');
       return;
     }
 
