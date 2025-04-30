@@ -36,25 +36,25 @@ const SonoInputScreen = () => {
     }
 
     try {
-      // Inserindo os dados no Supabase
+      // Inserir dados no Supabase
       const { data, error } = await supabase.from('dados_usuario').insert([
         {
-          user_id: userId, // Relaciona ao usuário logado
+          user_id: userId, 
           sono: Number(sleepHours), // Horas dormidas
-          qualidade_sono: Number(sleepQuality), // Avaliação da qualidade do sono (0-10)
-          dificuldade_ao_dormir: difficultySleeping, // Resposta sobre dificuldade ao dormir
+          qualidade_sono: Number(sleepQuality), // Qualidade do sono (0-10)
+          dificuldade_ao_dormir: difficultySleeping, 
           sensacao_ao_acordar: wakeFeeling, // Resposta sobre sensação ao acordar
-          uso_dispositivos: deviceUsage, // Resposta sobre uso de dispositivos antes de dormir
-          glicose: null, // Valor padrão para glicose, já que não será usado aqui
+          uso_dispositivos: deviceUsage, // Resposta sobre uso de dispositivos
+          glicose: null, // Placeholder para glicose, se necessário
           created_at: new Date(), // Timestamp opcional
         },
       ]);
 
       if (error) {
-        console.error('Erro ao salvar no Supabase:', error);
+        console.error('Erro ao guardar no Supabase:', error);
         Alert.alert('Erro', 'Erro ao guardar os dados.');
       } else {
-        Alert.alert('Sucesso', 'Dados de sono salvos com sucesso!');
+        Alert.alert('Sucesso', 'Dados de sono guardados com sucesso!');
         setSleepHours('');
         setSleepQuality('');
         setDifficultySleeping('');
@@ -73,7 +73,7 @@ const SonoInputScreen = () => {
 
       {/* Pergunta 1: Quantas horas dormidas */}
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Quantas horas você dormiu?</Text>
+        <Text style={styles.label}>Quantas horas dormiu?</Text>
         <TextInput
           style={styles.input}
           placeholder="Ex: 8"
@@ -85,7 +85,7 @@ const SonoInputScreen = () => {
 
       {/* Pergunta 2: Qualidade do sono (0-10) */}
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Avalie a qualidade do sono de 0 a 10:</Text>
+        <Text style={styles.label}>Avalie a qualidade do seu sono de 0 a 10:</Text>
         <TextInput
           style={styles.input}
           placeholder="Ex: 8"
@@ -97,7 +97,7 @@ const SonoInputScreen = () => {
 
       {/* Pergunta 3: Dificuldade ao dormir */}
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Teve dificuldade para dormir? (Sim ou Não)</Text>
+        <Text style={styles.label}>Teve dificuldade em dormir? (Sim ou Não)</Text>
         <TextInput
           style={styles.input}
           placeholder="Ex: Sim"
@@ -108,7 +108,7 @@ const SonoInputScreen = () => {
 
       {/* Pergunta 4: Sensação ao acordar */}
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Como você se sentiu ao acordar? (Ex: Descansado)</Text>
+        <Text style={styles.label}>Como se sentiu ao acordar? (Ex: Descansado)</Text>
         <TextInput
           style={styles.input}
           placeholder="Ex: Descansado"

@@ -14,7 +14,7 @@ const SleepInfoScreen = () => {
             🛏️ Níveis de Sono
           </Text>
           <Text className="text-lg text-gray-600 text-center mt-2">
-            Explore os estágios do sono e descubra sua importância para o bem-estar.
+            Explore os ciclos do sono e descubra a sua importância para o bem-estar.
           </Text>
         </View>
 
@@ -50,7 +50,7 @@ const SleepInfoScreen = () => {
             <View className="mb-4">
               <Text className="text-lg font-semibold text-primary-700">1. Sono Leve</Text>
               <Text className="text-md text-gray-600">
-                Este é o estágio inicial do descanso. O corpo relaxa e os batimentos cardíacos diminuem.
+                Este é o ciclo inicial do descanso. O corpo relaxa e os batimentos cardíacos diminuem.
               </Text>
             </View>
             <View className="mb-4">
@@ -62,7 +62,7 @@ const SleepInfoScreen = () => {
             <View>
               <Text className="text-lg font-semibold text-primary-700">3. Sono REM</Text>
               <Text className="text-md text-gray-600">
-                Caracterizado por sonhos intensos, é crucial para o aprendizado e a memória.
+                Caracterizado por sonhos intensos, é crucial para a aprendizagem e para a memória.
               </Text>
             </View>
           </View>
@@ -76,7 +76,7 @@ const SleepInfoScreen = () => {
           </Text>
           <View className="mt-4">
             <Text className="text-md text-gray-600">✔️ Crie um ambiente confortável e tranquilo no quarto.</Text>
-            <Text className="text-md text-gray-600">✔️ Evite cafeína e eletrônicos antes de dormir.</Text>
+            <Text className="text-md text-gray-600">✔️ Evite cafeína e dispositivos eletrónicos antes de dormir.</Text>
             <Text className="text-md text-gray-600">✔️ Estabeleça uma rotina consistente de sono.</Text>
             <Text className="text-md text-gray-600">✔️ Pratique exercícios físicos regularmente.</Text>
           </View>
@@ -86,7 +86,7 @@ const SleepInfoScreen = () => {
         <View className="mt-10 p-5 bg-white rounded-lg shadow-md">
           <Text className="text-2xl font-semibold text-primary-800">🌟 Importância do Sono</Text>
           <Text className="text-md text-gray-700 mt-2">
-            O sono desempenha um papel vital na saúde geral. Ele regula processos importantes como o equilíbrio hormonal, recuperação física e saúde mental. A falta de sono pode causar problemas graves, como estresse, ansiedade e fraqueza imunológica.
+            O sono desempenha um papel vital na saúde geral. Este regula processos importantes como o equilíbrio hormonal, recuperação física e saúde mental. A falta de sono pode causar problemas graves, como stresse, ansiedade e fraqueza imunológica.
           </Text>
         </View>
       </ScrollView>

@@ -28,7 +28,7 @@ const AppInfoScreen = () => {
         {/* Cabeçalho */}
         <View style={{ marginTop: 60, alignItems: 'center' }}>
           <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#333', textAlign: 'center' }}>
-            📱 Funcionamento da App
+            📱 Funcionalidades da App
           </Text>
           <Text style={{ fontSize: 16, color: '#555', textAlign: 'center', marginTop: 10 }}>
             Saiba como utilizar os recursos da aplicação para melhorar a sua saúde e bem-estar.
@@ -39,7 +39,7 @@ const AppInfoScreen = () => {
         <View style={{ marginTop: 30, backgroundColor: '#fff', borderRadius: 10, padding: 20, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10, elevation: 5 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#333' }}>🎯 Qual o nosso propósito?</Text>
           <Text style={{ fontSize: 14, color: '#666', marginTop: 10, lineHeight: 20 }}>
-            A aplicação foi criada para auxiliar na monitorização dos seus hábitos de sono e níveis de glicose no sangue. Com gráficos intuitivos e recomendações personalizadas, esta vai tentar ajudar a desenvolver uma rotina mais equilibrada e saudável.
+            A aplicação foi criada para auxiliar a monitorização dos seus hábitos de sono e níveis de glicose no sangue. Com gráficos intuitivos e recomendações personalizadas, esta vai tentar ajudar a desenvolver uma rotina mais equilibrada e saudável.
           </Text>
         </View>
 

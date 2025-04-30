@@ -43,7 +43,7 @@ export default function Index() {
           if (finalScore <= 5) {
             setSleepMessage("Tente dormir melhor hoje!");
           } else {
-            setSleepMessage("Seu sono está ótimo!");
+            setSleepMessage("O seu sono está ótimo!");
           }
 
           if (glicose <= 70) {
@@ -51,7 +51,7 @@ export default function Index() {
           } else if (glicose <= 140) {
             setGlucoseMessage("Glicose dentro do normal!");
           } else {
-            setGlucoseMessage("Cuidado: glicose elevada.");
+            setGlucoseMessage("Tenha cuidado: glicose elevada.");
           }
         }
       } catch (err) {
@@ -82,7 +82,7 @@ export default function Index() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Resumo do Sono</Text>
           <Text style={styles.cardValue}>
-            {sleepEvaluation ? `${sleepEvaluation} / 10` : "Carregando..."}
+            {sleepEvaluation ? `${sleepEvaluation} / 10` : "A carregar..."}
           </Text>
           <Text style={styles.cardText}>{sleepMessage}</Text>
         </View>
@@ -90,7 +90,7 @@ export default function Index() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Glicose Atual</Text>
           <Text style={styles.cardValue}>
-            {glucoseValue ? `${glucoseValue} mg/dL` : "Carregando..."}
+            {glucoseValue ? `${glucoseValue} mg/dL` : "A carregar..."}
           </Text>
           <Text style={styles.cardText}>{glucoseMessage}</Text>
         </View>
@@ -98,16 +98,16 @@ export default function Index() {
         {/* Ações Recomendadas */}
         <Text style={styles.sectionTitle}>Ações para Hoje</Text>
         <View style={styles.actionBox}>
-          <Text style={styles.actionItem}>🌙 Durma 30 minutos mais cedo.</Text>
+          <Text style={styles.actionItem}>🌙 Tente dormir 30 minutos mais cedo.</Text>
           <Text style={styles.actionItem}>💧 Beba 2 litros de água.</Text>
           <Text style={styles.actionItem}>🚶‍♂️ Faça uma caminhada rápida.</Text>
-          <Text style={styles.actionItem}>🍎 Prefira frutas no café da manhã.</Text>
+          <Text style={styles.actionItem}>🍎 Dê preferência a frutas no pequeno almoço.</Text>
         </View>
 
         {/* Progresso */}
         <Text style={styles.sectionTitle}>Seu Progresso</Text>
         <View style={styles.progressBox}>
-          <Text style={styles.progressItem}>🏆 5 dias seguidos dormindo 7h+</Text>
+          <Text style={styles.progressItem}>🏆 5 dias seguidos a dormir 7h+</Text>
           <Text style={styles.progressItem}>💪 Glicose controlada 3 dias</Text>
         </View>
       </ScrollView>

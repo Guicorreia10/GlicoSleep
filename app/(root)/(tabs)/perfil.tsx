@@ -49,7 +49,7 @@ const Profile = () => {
   const changeLanguage = (newLanguage: string) => {
     setLanguage(newLanguage);
     Alert.alert("Idioma Alterado", `O idioma foi alterado para: ${newLanguage}`);
-    // Aqui você pode adicionar lógica adicional para mudar o idioma da aplicação
+    //meter logica para alterar idioma
   };
 
   return (

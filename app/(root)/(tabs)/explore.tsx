@@ -21,14 +21,14 @@ const Explore = () => {
   useEffect(() => {
     const fetchRegistros = async () => {
       try {
-        // Busca dados de glicose e sono no Supabase
+        // Procura dados de glicose e sono no Supabase
         const { data, error } = await supabase
           .from("dados_usuario")
           .select("id, created_at, glicose, sono")
           .order("created_at", { ascending: false });
 
         if (error) {
-          console.error("Erro ao buscar dados:", error);
+          console.error("Erro ao procurar dados:", error);
           Alert.alert("Erro", "Não foi possível carregar os dados.");
           return;
         }
@@ -44,10 +44,10 @@ const Explore = () => {
             valorGlicose: item.glicose ? item.glicose.toString() : undefined,
             detalhesSono: item.sono ? `Duração do sono: ${item.sono} horas` : undefined,
           })) as Registro[];
-          setRegistros(formattedData); // Atualiza o estado com os registros formatados
+          setRegistros(formattedData);
         }
       } catch (err) {
-        console.error("Erro inesperado ao carregar registros:", err);
+        console.error("Erro inesperado ao carregar registos:", err);
         Alert.alert("Erro", "Erro inesperado ao carregar os dados.");
       }
     };

@@ -7,7 +7,7 @@ const ManualInputScreen = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' }}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>Escolha o Tipo de Entrada</Text>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>Selecione o tipo de dados a inserir:</Text>
 
       {/* Navegar para Níveis de Glicose */}
       <TouchableOpacity
@@ -35,7 +35,7 @@ const ManualInputScreen = () => {
           alignItems: 'center',
         }}
       >
-        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Dados de Sono</Text>
+        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Dados do Sono</Text>
       </TouchableOpacity>
     </View>
   );

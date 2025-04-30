@@ -41,7 +41,7 @@ const Conectar = () => {
       const userId = user.data.user?.id;
 
       if (!userId) {
-        Alert.alert("Erro", "Usuário não autenticado.");
+        Alert.alert("Erro", "Utilizador não logado.");
         return;
       }
 
@@ -52,9 +52,9 @@ const Conectar = () => {
       });
 
       if (error) {
-        Alert.alert("Erro ao salvar no Supabase", error.message);
+        Alert.alert("Erro ao guardar no Supabase", error.message);
       } else {
-        Alert.alert("Sucesso!", `Glicose: ${glicose} mg/dL | Sono: ${sono} h`);
+        Alert.alert("Perfeito!", `Glicose: ${glicose} mg/dL | Sono: ${sono} h`);
       }
     } catch (err) {
       if (err instanceof Error) {

@@ -5,20 +5,20 @@ import { supabase } from "../lib/supabase";
 import iconImage from "../assets/images/icon.png";
 
 const Registro = () => {
-  const [nome, setNome] = useState(""); // Nome completo do usuário
-  const [email, setEmail] = useState(""); // Email do usuário
-  const [password, setPassword] = useState(""); // Senha do usuário
+  const [nome, setNome] = useState(""); 
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
   const router = useRouter();
 
   const handleRegister = async () => {
     try {
-      // Tenta criar o usuário no Supabase
+      // Verifica se todos os campos estão preenchidos
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            nome_completo: nome, // Adiciona o nome completo no perfil do usuário
+            nome_completo: nome, 
           },
         },
       });
@@ -27,7 +27,7 @@ const Registro = () => {
 
       // Verifica se a conta foi criada com sucesso
       if (data.user) {
-        Alert.alert("Sucesso", "Conta criada com sucesso! Verifique seu e-mail.");
+        Alert.alert("Perfeito", "Conta criada com sucesso! Verifique o seu e-mail.");
         router.push("/sign-in"); // Redireciona para a página de login
       }
     } catch (error: any) {

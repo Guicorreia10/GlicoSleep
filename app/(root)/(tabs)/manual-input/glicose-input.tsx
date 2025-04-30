@@ -15,7 +15,7 @@ const GlicoseInputScreen = () => {
       if (error) {
         console.error('Erro ao recuperar user_id:', error);
       } else if (data?.user) {
-        setUserId(data.user.id); // Armazena o ID do usuário autenticado
+        setUserId(data.user.id); // Armazena o ID do usuário logado
       }
     };
 
@@ -29,18 +29,18 @@ const GlicoseInputScreen = () => {
     }
 
     if (!userId) {
-      Alert.alert('Erro', 'Utilizador não autenticado. Faça login novamente.');
+      Alert.alert('Erro', 'Utilizador não conectado. Faça login novamente.');
       return;
     }
 
     try {
-      // Registrar os dados no Supabase
+      // Registar os dados no Supabase
       const { data, error } = await supabase.from('dados_usuario').insert([
         {
-          user_id: userId, // Relaciona o dado ao usuário autenticado
-          glicose: Number(glucoseLevel), // Nível de glicose informado
+          user_id: userId, 
+          glicose: Number(glucoseLevel), // Nível de glicose inserido pelo utilizador
           sono: null, // Campo opcional, pode ser null caso não seja usado
-          created_at: new Date().toISOString(), // Registra a data e hora no formato ISO
+          created_at: new Date().toISOString(), // Regista a data e hora no formato ISO
         },
       ]);
 
